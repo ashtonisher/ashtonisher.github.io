@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GUBOG.DEV — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #FF6B2B;
+    --bg: #0E0E0E;
+    --bg2: #181818;
+    --bg3: #222222;
+    --text: #F0EDE8;
+    --text2: #999;
+    --border: rgba(255,255,255,0.08);
+    --card-bg: #181818;
+    --section-px: 2rem;
+  }
+  .light-mode {
+    --accent: #1A6FD4;
+    --bg: #F5F4F1;
+    --bg2: #FFFFFF;
+    --bg3: #EEECEA;
+    --text: #111;
+    --text2: #666;
+    --border: rgba(0,0,0,0.08);
+    --card-bg: #FFFFFF;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  body {
+    font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem var(--section-px);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a {
+    font-size: 0.8rem;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .theme-toggle:hover { background: var(--accent); color: #fff; }
+  .theme-toggle .icon-outline { display: flex; }
+  .theme-toggle .icon-filled { display: none; }
+  .theme-toggle:hover .icon-outline { display: none; }
+  .theme-toggle:hover .icon-filled { display: flex; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 8px;
+    flex-shrink: 0;
+  }
+  .hamburger span {
+    display: block;
+    height: 1.5px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem var(--section-px);
+    gap: 0.25rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 0.9rem;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* LAYOUT */
+  .divider { height: 1px; background: var(--border); max-width: 900px; margin: 0 auto; }
+  .section { padding: 4rem var(--section-px); max-width: 900px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+
+  .section-label.collapsible { cursor: pointer; user-select: none; }
+  .section-label.collapsible:hover { opacity: 0.8; }
+  .section-label.collapsible.collapsed { margin-bottom: 0; }
+
+  .collapse-icon {
+    display: flex;
+    align-items: center;
+    color: var(--text2);
+    flex-shrink: 0;
+  }
+  .section-label.collapsed .collapse-icon { transform: rotate(180deg); }
+
+  .collapsible-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.4s ease, opacity 0.3s ease;
+    opacity: 1;
+  }
+  .collapsible-body.collapsed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  .collapsible-body > div { overflow: hidden; }
+
+  /* HERO */
+  .hero { padding: 5rem var(--section-px) 4rem; max-width: 900px; margin: 0 auto; }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+    margin-bottom: 2rem;
+  }
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    overflow: visible;
+    padding-bottom: 0.1em;
+  }
+  .cursor {
+    display: inline-block;
+    color: var(--accent);
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    font-weight: 300;
+    font-size: 0.85em;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--text2);
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text2);
+    max-width: 720px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1.75rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* STATS */
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+  .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    gap: 0.05em;
+  }
+  .stat-num-slot {
+    display: inline-block;
+    overflow: hidden;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    position: relative;
+    min-width: 1ch;
+  }
+  .stat-unit {
+    display: inline-block;
+    line-height: 2.2rem;
+  }
+  .stat-num-inner {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 2.2rem;
+  }
+  .stat-label { font-size: 0.73rem; color: var(--text2); letter-spacing: 0.02em; }
+
+  /* SKILLS */
+  .skills-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .skill-tag {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); padding: 0.4rem 0.9rem;
+    border-radius: 2rem; font-size: 0.8rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .skill-tag.accent { border-color: var(--accent); color: var(--accent); }
+
+  /* EXPERIENCE */
+  .experience-item {
+    border-left: 2px solid var(--border);
+    padding-left: 1.5rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .experience-item::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .exp-period { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+  .exp-company { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .exp-role { font-size: 0.85rem; color: var(--text2); margin-bottom: 0.75rem; }
+  .exp-desc { font-size: 0.875rem; line-height: 1.75; color: var(--text2); }
+
+  /* PROJECTS */
+  .project-grid {
+    columns: 3 220px;
+    column-gap: 1rem;
+  }
+  .project-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .project-card-tag { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  .project-card-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .project-card-desc { font-size: 0.8rem; line-height: 1.7; color: var(--text2); }
+
+  /* ACHIEVEMENT LIST */
+  .achievement-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .achievement-list li { font-size: 0.875rem; line-height: 1.7; color: var(--text2); padding-left: 1rem; position: relative; }
+  .achievement-list li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
+
+  /* OPEN SOURCE */
+  .open-source-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    transition: border-color 0.2s;
+  }
+  .open-source-card:hover { border-color: var(--accent); }
+  .os-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .os-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.2rem; }
+  .os-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+
+  /* GITHUB */
+  .github-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1rem; text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer; text-decoration: none;
+    max-width: 400px;
+  }
+  .github-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .github-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+  .github-card-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
+  .github-card-url { font-size: 0.78rem; color: var(--accent); }
+  .github-card-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
+
+  .hidden-icon { display: none !important; }
+
+  .project-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 1.25rem;
+  }
+  .project-group-header:first-child { margin-top: 0; }
+  .project-group-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .project-group-line { flex: 1; height: 1px; background: var(--border); }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem var(--section-px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--text2);
+    max-width: 100%;
+  }
+  .footer-left p { margin-top: 0.25rem; }
+  .footer-github {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+  .footer-github:hover { color: var(--accent); }
+  .footer-github svg { width: 20px; height: 20px; fill: currentColor; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    :root { --section-px: 1.25rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 3rem var(--section-px) 2.5rem; }
+    .section { padding: 3rem var(--section-px); }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .project-grid { columns: 1; }
+    .hero-cta { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+    .open-source-card { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (min-width: 641px) and (max-width: 768px) {
+    :root { --section-px: 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.72rem; }
+    .project-grid { columns: 2; }
+  }
+
+  /* SVG icon sizes */
+  .svg-icon-sm { width: 16px; height: 16px; }
+  .svg-icon-os { width: 20px; height: 20px; fill: var(--text2); }
+  .svg-icon-github { width: 28px; height: 28px; fill: var(--text2); }
+
+  /* Skills */
+  .skills-col { display: flex; flex-direction: column; gap: 1rem; }
+  .skill-category-label { font-size: 0.75rem; color: var(--text2); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+
+  /* Experience */
+  .exp-content { padding-left: 4px; }
+
+  /* Projects */
+  .project-section { margin-bottom: 2rem; }
+  .project-category-label { font-size: 0.8rem; color: var(--text2); margin-bottom: 1.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  a.project-card { text-decoration: none; color: inherit; }
+  .open-source-section { margin-top: 3.5rem; }
+  .open-source-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+  a.open-source-card { text-decoration: none; color: inherit; }
+
+  /* Personal */
+  .personal-desc { font-size: 0.875rem; color: var(--text2); margin-bottom: 1.5rem; line-height: 1.7; }
+
+  /* Footer */
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent); }
+</style>
+</head>
+<body id="root">
+
+  <nav class="nav">
+    <span class="nav-logo">gubog.dev</span>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a onclick="goTo('about')">소개</a>
+        <a onclick="goTo('experience')">경력</a>
+        <a onclick="goTo('projects')">프로젝트</a>
+        <a onclick="goTo('personal')">개인 프로젝트</a>
+      </div>
+  <button class="theme-toggle" id="themeBtn" title="테마 전환">
+    <!-- 달 outline (기본) -->
+    <svg id="iconMoon" class="icon-outline svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <!-- 달 filled (hover) -->
+    <svg id="iconMoonFilled" class="icon-filled hidden-icon svg-icon-sm" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <!-- 해 outline (기본) -->
+    <svg id="iconSun" class="icon-outline hidden-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <!-- 해 filled (hover) -->
+    <svg id="iconSunFilled" class="icon-filled hidden-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="currentColor"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+      <button class="hamburger" id="hamburger" aria-label="메뉴">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a onclick="goTo('about')">소개</a>
+    <a onclick="goTo('experience')">경력</a>
+    <a onclick="goTo('projects')">프로젝트</a>
+    <a onclick="goTo('personal')">개인 프로젝트</a>
+  </div>
+
+  <section class="hero" id="about">
+    <h1 class="hero-name">gubog.dev<span class="cursor">|</span></h1>
+    <p class="hero-desc">UX 디테일과 성능 최적화, 유지보수하기 좋은 코드 작성에 대해 고민하는 프론트엔드 개발자입니다.<br>현장 강의 경험과 다수의 기획·디자인 협업을 통해 비개발 직군과의 원활한 소통에 익숙합니다.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="goTo('experience')">경력 보기</button>
+      <button class="btn-secondary" onclick="goTo('projects')">프로젝트 보기</button>
+    </div>
+  </section>
+
+
+
+  <section class="section">
+    <div class="section-label">Stats</div>
+    <div class="stat-row" id="statRow">
+      <div class="stat-card"><span class="stat-num"><span class="stat-num-slot" data-target="5">—</span><span class="stat-unit">년</span></span><span class="stat-label">개발 경력</span></div>
+      <div class="stat-card"><span class="stat-num"><span class="stat-num-slot" data-target="13">—</span><span class="stat-unit">K+</span></span><span class="stat-label">서비스 피크 DAU</span></div>
+      <div class="stat-card"><span class="stat-num"><span class="stat-num-slot" data-target="10">—</span><span class="stat-unit">+</span></span><span class="stat-label">담당 프로젝트</span></div>
+      <div class="stat-card"><span class="stat-num"><span class="stat-num-slot" data-target="1">—</span></span><span class="stat-label">오픈소스 기여</span></div>
+    </div>
+
+    <div class="section-label collapsible" onclick="toggleSection(this)">경험한 것들<span class="collapse-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8L6 4L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="collapsible-body">
+    <div>
+    <ul class="achievement-list">
+      <li>React · TypeScript 환경에서 프론트엔드 앱 설계, 개발, 운영 경험이 있습니다.</li>
+      <li>React 소스를 Next.js로 마이그레이션 개발 및 검증한 경험이 있습니다.</li>
+      <li>React Class 컴포넌트, ASP 등 레거시 기반 서비스를 최신 스택으로 마이그레이션한 경험이 있습니다.</li>
+      <li>Yarn Berry + Turbo 기반 모노레포를 직접 설계하고, 프로젝트 간 공통 패키지 구조를 구축한 경험이 있습니다.</li>
+      <li>빌드 속도·번들 사이즈·LCP/CLS 등 성능 지표를 분석하고 개선한 경험이 있습니다.</li>
+      <li>브라우저 호환성 이슈를 분석하고 대체 구현으로 해결한 경험이 있습니다. (iOS 17 이하 OffscreenCanvas 미지원 → CSS transition 기반 파티클 훅으로 대체)</li>
+      <li>앱-웹뷰 브릿지 통신을 활용해 네이티브 메서드 호출 및 유저 컨텍스트 수신을 구현한 경험이 있습니다.</li>
+      <li>Android · iOS 웹뷰 환경의 이미지 렌더링, 터치 이벤트, safe-area 등 크로스 플랫폼 이슈를 다수 해결한 경험이 있습니다.</li>
+    </ul>
+    </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="skills">
+    <div class="section-label collapsible" onclick="toggleSection(this)">기술 스택<span class="collapse-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8L6 4L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="collapsible-body">
+    <div>
+    <div class="skills-col">
+      <div>
+        <p class="skill-category-label">LANGUAGE</p>
+        <div class="skills-list">
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">JavaScript</span>
+        </div>
+      </div>
+      <div>
+        <p class="skill-category-label">FRAMEWORK</p>
+        <div class="skills-list">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Next.js</span>
+        </div>
+      </div>
+      <div>
+        <p class="skill-category-label">상태관리</p>
+        <div class="skills-list">
+          <span class="skill-tag">Zustand</span>
+          <span class="skill-tag">TanStack Query</span>
+          <span class="skill-tag">Recoil</span>
+          <span class="skill-tag">useSyncExternalStore</span>
+        </div>
+      </div>
+      <div>
+        <p class="skill-category-label">STYLE</p>
+        <div class="skills-list">
+          <span class="skill-tag">Sass</span>
+          <span class="skill-tag">styled-components</span>
+          <span class="skill-tag">Tailwind CSS</span>
+          <span class="skill-tag">shadcn/ui</span>
+        </div>
+      </div>
+      <div>
+        <p class="skill-category-label">INFRA</p>
+        <div class="skills-list">
+          <span class="skill-tag">Yarn Berry</span>
+          <span class="skill-tag">Turbo</span>
+          <span class="skill-tag">Jenkins</span>
+        </div>
+      </div>
+      <div>
+        <p class="skill-category-label">협업</p>
+        <div class="skills-list">
+          <span class="skill-tag">Figma</span>
+          <span class="skill-tag">Zeplin</span>
+          <span class="skill-tag">Jira</span>
+          <span class="skill-tag">Confluence</span>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="experience">
+    <div class="section-label collapsible" onclick="toggleSection(this)">경력<span class="collapse-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8L6 4L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="collapsible-body">
+    <div class="exp-content">
+    <div class="experience-item">
+      <p class="exp-period">2022.02 — 현재</p>
+      <p class="exp-company">바나플</p>
+      <p class="exp-role">프론트엔드 개발자 · 5년차</p>
+      <p class="exp-desc">F&amp;B 프랜차이즈 바나프레소 서비스 전반(홈페이지·웹뷰·주문·어드민)과 자회사 퀵 서비스 개발·유지보수 담당. 모노레포 설계부터 CI/CD 파이프라인 관리까지 단독 수행. 일 평균 1만 명 이상 접속하는 앱테크 게임 서비스 MVP 단독 런칭·운영.</p>
+    </div>
+    <div class="experience-item">
+      <p class="exp-period">2021.04 — 2022.03</p>
+      <p class="exp-company">SBS 컴퓨터 아카데미</p>
+      <p class="exp-role">강사 · 1년</p>
+      <p class="exp-desc">포토샵·일러스트레이터 등 디자인 기초 툴 및 HTML/CSS/JavaScript 웹 퍼블리싱 강의 담당.</p>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="projects">
+    <div class="section-label collapsible" onclick="toggleSection(this)">주요 프로젝트<span class="collapse-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8L6 4L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="collapsible-body">
+    <div>
+    <div class="project-group-header">
+      <span class="project-group-label">바나플</span>
+      <span class="project-group-line"></span>
+    </div>
+
+    <div class="project-section">
+      <p class="project-category-label">인프라 / 아키텍처</p>
+      <div class="project-grid">
+        <div class="project-card">
+          <p class="project-card-tag">모노레포</p>
+          <p class="project-card-title">모노레포 설계·구축</p>
+          <p class="project-card-desc"><span class="highlight">Yarn Berry workspaces + Turbo</span> 기반 모노레포 직접 설계·구축. 멀티 앱 환경에서 독립적인 빌드·배포 구조 확립.</p>
+        </div>
+        <div class="project-card">
+          <p class="project-card-tag">공통 패키지</p>
+          <p class="project-card-title">공통 패키지 설계</p>
+          <p class="project-card-desc">ui·hooks·modules·api 공통 패키지 설계 및 개발. 프로젝트 간 코드 재사용 구조 확립으로 개발 공수 단축.</p>
+        </div>
+        <div class="project-card">
+          <p class="project-card-tag">컴포넌트</p>
+          <p class="project-card-title">Storybook</p>
+          <p class="project-card-desc">Storybook 7 기반 공용 컴포넌트 격리 개발 및 시각적 검증 환경 구축.</p>
+        </div>
+        <div class="project-card">
+          <p class="project-card-tag">문서화</p>
+          <p class="project-card-title">Confluence</p>
+          <p class="project-card-desc">웹 서비스별 플로우를 Confluence에 문서화.</p>
+        </div>
+        <div class="project-card">
+          <p class="project-card-tag">CI/CD</p>
+          <p class="project-card-title">Jenkins 빌드·배포 파이프라인</p>
+          <p class="project-card-desc">Jenkins 기반 앱별 독립 빌드·배포 파이프라인 구성 및 관리.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-section">
+      <p class="project-category-label">서비스 개발</p>
+      <div class="project-grid">
+      <a class="project-card" href="https://banapresso.com" target="_blank">
+        <p class="project-card-tag">홈페이지</p>
+        <p class="project-card-title">바나프레소 홈페이지</p>
+        <p class="project-card-desc"><span class="highlight">React 18</span> 마이그레이션, 이미지 최적화·lazy loading·PurgeCSS·Gzip으로 성능 개선. <span class="highlight">Next.js</span> 도입 시도.</p>
+      </a>
+      <a class="project-card" href="https://order.banapresso.com/" target="_blank">
+        <p class="project-card-tag">주문</p>
+        <p class="project-card-title">바나프레소 웹 주문</p>
+        <p class="project-card-desc">결제·장바구니·할인·회원 인증 로직 전반 개발. 나이스 본인인증 모듈 연동.</p>
+      </a>
+      <div class="project-card">
+        <p class="project-card-tag">어드민</p>
+        <p class="project-card-title">가맹점주용 웹 사이트</p>
+        <p class="project-card-desc">가맹점 매출·정산 관리 페이지 신규 개발부터 유지보수·리뉴얼까지 전 주기 담당. 차트·테이블 기반 데이터 시각화 및 엑셀 다운로드.</p>
+      </div>
+      <div class="project-card">
+        <p class="project-card-tag">모바일 웹뷰</p>
+        <p class="project-card-title">복숭아키우기</p>
+        <p class="project-card-desc">앱테크 게임 서비스 프론트엔드 단독 개발. <span class="highlight">DAU 1만 명+ (피크 1.3만 명) 1년 이상 유지.</span> 신규 가맹 유치 마케팅 포인트로 활용.</p>
+      </div>
+      <div class="project-card">
+        <p class="project-card-tag">이벤트</p>
+        <p class="project-card-title">포춘쿠키</p>
+        <p class="project-card-desc">운세 라벨지 연계 미니 페이지 및 이벤트 홍보 기능 신규 개발 및 런칭.</p>
+      </div>
+      <div class="project-card">
+        <p class="project-card-tag">게이미피케이션</p>
+        <p class="project-card-title">활동배지</p>
+        <p class="project-card-desc">SNS OCR 인증 포함 미션 기반 게이미피케이션·경쟁 요소 구현 및 서비스 런칭.</p>
+      </div>
+      <div class="project-card">
+        <p class="project-card-tag">솔루션</p>
+        <p class="project-card-title">범용 퀵 페이지</p>
+        <p class="project-card-desc">회원사별 커스터마이징 지원하는 퀵 주문 접수·상태 추적 솔루션 신규 개발 및 런칭. 카카오 채널 연동.</p>
+      </div>
+      <div class="project-card">
+        <p class="project-card-tag">선결제 관리</p>
+        <p class="project-card-title">선결제 서비스</p>
+        <p class="project-card-desc">개인·단체 선결제 적립·사용내역 조회, 회원정보 관리, 환불 신청 페이지 개발.</p>
+      </div>
+      <a class="project-card" href="https://banaple.co.kr/" target="_blank">
+        <p class="project-card-tag">홈페이지</p>
+        <p class="project-card-title">바나플 홈페이지 (퀵 서비스)</p>
+        <p class="project-card-desc">ASP → React 마이그레이션. 법인 분리 시 외부 ASP 의존 없이 독립 운영 가능한 구조로 전환.</p>
+      </a>
+    </div>
+    </div>
+
+    <div class="open-source-section">
+      <div class="project-group-header">
+        <span class="project-group-label">오픈소스 기여</span>
+        <span class="project-group-line"></span>
+      </div>
+      <div class="open-source-list">
+        <a class="open-source-card" href="https://cahilfoley.github.io/react-snowfall/" target="_blank">
+          <div class="os-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="svg-icon-os"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </div>
+          <div>
+            <p class="os-title">react-snowfall</p>
+            <p class="os-desc">3D Rotation 효과 옵션 추가 기여</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="personal">
+    <div class="section-label collapsible" onclick="toggleSection(this)">개인 프로젝트<span class="collapse-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8L6 4L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="collapsible-body">
+    <div>
+    <p class="personal-desc">GitHub에서 더 많은 작업물을 확인할 수 있습니다.</p>
+    <a class="github-card" href="https://github.com/ashtonisher" target="_blank">
+      <div class="github-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="svg-icon-github"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </div>
+      <p class="github-card-title">ashtonisher</p>
+      <p class="github-card-url">github.com/ashtonisher</p>
+      <p class="github-card-desc">개인 프로젝트 및 작업물을 GitHub에서 확인하세요.</p>
+    </a>
+    </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <footer class="footer">
+    <div class="footer-left">
+      <p class="footer-logo">gubog.dev</p>
+      <p>프론트엔드 개발자</p>
+    </div>
+    <a class="footer-github" href="https://github.com/ashtonisher" target="_blank" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+  </footer>
+
+  <script>
+    const root = document.getElementById('root');
+    const themeBtn = document.getElementById('themeBtn');
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    // 시스템 설정 초기값
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    let dark = prefersDark.matches;
+
+    function applyTheme() {
+      root.classList.toggle('light-mode', !dark);
+      // 달/해 아이콘 전환 — CSS hover가 outline/filled 담당
+      const moonIcons = document.querySelectorAll('#iconMoon, #iconMoonFilled');
+      const sunIcons = document.querySelectorAll('#iconSun, #iconSunFilled');
+      moonIcons.forEach(el => el.classList.toggle('hidden-icon', !dark));
+      sunIcons.forEach(el => el.classList.toggle('hidden-icon', dark));
+    }
+
+    // 시스템 설정 변경 감지
+    prefersDark.addEventListener('change', (e) => {
+      dark = e.matches;
+      applyTheme();
+    });
+
+    themeBtn.addEventListener('click', () => {
+      dark = !dark;
+      applyTheme();
+    });
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+
+    function goTo(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const navH = document.querySelector('.nav').offsetHeight;
+      const top = el.getBoundingClientRect().top + window.scrollY - navH;
+      window.scrollTo({ top, behavior: 'smooth' });
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+
+    // Stats 슬롯머신 애니메이션
+    const statSlots = document.querySelectorAll('.stat-num-slot[data-target]');
+
+    function animateSlot(el) {
+      const target = parseInt(el.dataset.target);
+      const digits = String(target).length;
+      el.style.minWidth = `${digits}ch`;
+      const TOTAL = 12;
+      const STEP_MS = 50;
+      let step = 0;
+
+      el.innerHTML = `<span class="stat-num-inner">—</span>`;
+
+      function showNext() {
+        if (step > TOTAL) return;
+
+        const isLast = step === TOTAL;
+        let value;
+        if (isLast) {
+          value = target;
+        } else if (step / TOTAL < 0.5) {
+          value = Math.floor(Math.random() * (target * 3 + 10));
+        } else {
+          const gap = TOTAL - step;
+          value = Math.max(0, target - Math.floor(Math.random() * (gap + 1)));
+        }
+
+        const current = el.querySelector('.stat-num-inner');
+        const next = document.createElement('span');
+        next.className = 'stat-num-inner';
+        next.textContent = value;
+        next.style.cssText = `top: -100%; transition: top ${STEP_MS * 0.85}ms ease;`;
+        el.appendChild(next);
+
+        current.style.cssText = `top: 0; transition: top ${STEP_MS * 0.85}ms ease;`;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            current.style.top = '100%';
+            next.style.top = '0';
+          });
+        });
+
+        setTimeout(() => {
+          current.remove();
+          step++;
+          if (step <= TOTAL) showNext();
+        }, STEP_MS);
+      }
+
+      showNext();
+    }
+
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          statSlots.forEach(el => animateSlot(el));
+          statObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    function toggleSection(label) {
+      const body = label.nextElementSibling;
+      label.classList.toggle('collapsed');
+      body.classList.toggle('collapsed');
+    }
+
+    statObserver.observe(document.getElementById('statRow'));
+
+    applyTheme();
+  </script>
+</body>
+</html>

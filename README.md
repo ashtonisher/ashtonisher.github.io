@@ -1,6 +1,6 @@
-# gubog.dev — Portfolio
+# Portfolio
 
-프론트엔드 개발자 이력서입니다.
+개발자 이력서입니다.
 
 ## 사용한 기술
 

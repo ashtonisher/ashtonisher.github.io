@@ -357,6 +357,83 @@
   .project-card-desc { font-size: 0.8rem; line-height: 1.7; color: var(--text2); }
   .highlight { color: var(--text); font-weight: 500; }
 
+  /* Project preview modal trigger */
+  button.project-card {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: var(--accent); color: #fff; }
+  .modal-tag { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .modal-title { font-family: 'Space Grotesk', 'Space Grotesk Fallback', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem; padding-right: 2rem; }
+  .modal-desc { font-size: 0.85rem; line-height: 1.7; color: var(--text2); margin-bottom: 1.5rem; }
+  .modal-screenshots {
+    columns: 3 160px;
+    column-gap: 0.75rem;
+  }
+  .modal-screenshot {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+    background: var(--bg3);
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+  .modal-screenshot-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text2);
+    font-size: 0.8rem;
+  }
+
   /* ACHIEVEMENT LIST */
   .achievement-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; }
   .achievement-list li { font-size: 0.875rem; line-height: 1.7; color: var(--text2); padding-left: 1rem; position: relative; }
@@ -714,51 +791,51 @@
     <div class="project-section">
       <p class="project-category-label">서비스 개발</p>
       <div class="project-grid">
-      <a class="project-card" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+      <button class="project-card" type="button" onclick="openProjectModal('banapresso')">
         <p class="project-card-tag">홈페이지</p>
         <p class="project-card-title">바나프레소 홈페이지</p>
         <p class="project-card-desc"><span class="highlight">React 18</span> 마이그레이션. 이미지 최적화·lazy loading·PurgeCSS·Gzip으로 <span class="highlight">번들 사이즈 80% 감소</span>. <span class="highlight">Next.js</span> 기반 SSR 전환 설계 및 검증.</p>
-      </a>
-      <a class="project-card" href="https://order.banapresso.com/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+      </button>
+      <button class="project-card" type="button" onclick="openProjectModal('order')">
         <p class="project-card-tag">주문</p>
         <p class="project-card-title">바나프레소 웹 주문</p>
         <p class="project-card-desc">결제·장바구니·할인·회원 인증 로직 전반 개발. 나이스 본인인증 모듈 연동.</p>
-      </a>
-      <div class="project-card">
+      </button>
+      <button class="project-card" type="button" onclick="openProjectModal('franchise')">
         <p class="project-card-tag">어드민</p>
         <p class="project-card-title">가맹점주용 웹 사이트</p>
         <p class="project-card-desc"><span class="highlight">50개 이상 가맹점</span> 대상 매출·정산·발주 도메인 관리 페이지 신규 개발부터 유지보수·리뉴얼까지 전 주기 단독 담당. 차트·테이블 기반 데이터 시각화 및 엑셀 다운로드.</p>
-      </div>
-      <div class="project-card">
+      </button>
+      <button class="project-card" type="button" onclick="openProjectModal('farm')">
         <p class="project-card-tag">웹뷰</p>
         <p class="project-card-title">복숭아키우기</p>
         <p class="project-card-desc">게임형 앱테크 서비스 프론트엔드 단독 개발. Android·iOS 웹뷰 크로스 플랫폼 대응 및 렌더링 최적화로 <span class="highlight">DAU 1만 명+ (피크 1.3만 명) 1년 이상 안정 운영.</span> 신규 가맹 유치 마케팅 포인트로 활용.</p>
-      </div>
+      </button>
       <div class="project-card">
         <p class="project-card-tag">이벤트</p>
         <p class="project-card-title">포춘쿠키</p>
         <p class="project-card-desc">운세 라벨지 연계 미니 페이지 및 이벤트 홍보 기능 신규 개발 및 런칭.</p>
       </div>
-      <div class="project-card">
+      <button class="project-card" type="button" onclick="openProjectModal('badge')">
         <p class="project-card-tag">게이미피케이션</p>
         <p class="project-card-title">활동배지</p>
         <p class="project-card-desc">SNS OCR 인증 포함 미션 기반 게이미피케이션·경쟁 요소 구현 및 서비스 런칭.</p>
-      </div>
-      <div class="project-card">
+      </button>
+      <button class="project-card" type="button" onclick="openProjectModal('quick')">
         <p class="project-card-tag">솔루션</p>
         <p class="project-card-title">범용 퀵 페이지</p>
         <p class="project-card-desc">회원사별 커스터마이징 지원하는 퀵 주문 접수·상태 추적 솔루션 신규 개발 및 런칭. 카카오 채널 연동.</p>
-      </div>
+      </button>
       <div class="project-card">
         <p class="project-card-tag">선결제 관리</p>
         <p class="project-card-title">선결제 서비스</p>
         <p class="project-card-desc">개인·단체 선결제 적립·사용내역 조회, 회원정보 관리, 환불 신청 페이지 개발.</p>
       </div>
-      <a class="project-card" href="https://banaple.co.kr/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+      <button class="project-card" type="button" onclick="openProjectModal('banaple')">
         <p class="project-card-tag">홈페이지</p>
         <p class="project-card-title">바나플 홈페이지 (퀵 서비스)</p>
         <p class="project-card-desc">ASP → React 마이그레이션. 법인 분리 시 외부 ASP 의존 없이 독립 운영 가능한 구조로 전환.</p>
-      </a>
+      </button>
     </div>
     </div>
 
@@ -819,6 +896,18 @@
     </div>
     </div>
   </section>
+
+  <div class="modal-overlay" id="projectModal" aria-hidden="true" onclick="if(event.target===this) closeProjectModal()">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" aria-label="닫기" onclick="closeProjectModal()">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <p class="modal-tag" id="modalTag"></p>
+      <p class="modal-title" id="modalTitle"></p>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-screenshots" id="modalScreenshots"></div>
+    </div>
+  </div>
 
   <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
@@ -948,6 +1037,111 @@
         }
       });
     }, { threshold: 0.5 });
+
+    // 프로젝트 스크린샷 모달
+    const projectData = {
+      banapresso: {
+        tag: '홈페이지',
+        title: '바나프레소 홈페이지',
+        desc: 'React 18 마이그레이션. 이미지 최적화·lazy loading·PurgeCSS·Gzip으로 번들 사이즈 80% 감소. Next.js 기반 SSR 전환 설계 및 검증.',
+        screenshots: ['images/screenshots/banapresso/01.png', 'images/screenshots/banapresso/02.png', 'images/screenshots/banapresso/03.png', 'images/screenshots/banapresso/04.png']
+      },
+      order: {
+        tag: '주문',
+        title: '바나프레소 웹 주문',
+        desc: '결제·장바구니·할인·회원 인증 로직 전반 개발. 나이스 본인인증 모듈 연동.',
+        screenshots: ['images/screenshots/order/01.png', 'images/screenshots/order/02.png', 'images/screenshots/order/03.png', 'images/screenshots/order/04.png', 'images/screenshots/order/05.png']
+      },
+      banaple: {
+        tag: '홈페이지',
+        title: '바나플 홈페이지 (퀵 서비스)',
+        desc: 'ASP → React 마이그레이션. 법인 분리 시 외부 ASP 의존 없이 독립 운영 가능한 구조로 전환.',
+        screenshots: ['images/screenshots/banaple/01.png', 'images/screenshots/banaple/02.png']
+      },
+      farm: {
+        tag: '웹뷰',
+        title: '복숭아키우기',
+        desc: '게임형 앱테크 서비스 프론트엔드 단독 개발. Android·iOS 웹뷰 크로스 플랫폼 대응 및 렌더링 최적화로 DAU 1만 명+ (피크 1.3만 명) 1년 이상 안정 운영.',
+        screenshots: ['images/screenshots/farm/01.png', 'images/screenshots/farm/02.png', 'images/screenshots/farm/03.png', 'images/screenshots/farm/04.png', 'images/screenshots/farm/05.png']
+      },
+      badge: {
+        tag: '게이미피케이션',
+        title: '활동배지',
+        desc: 'SNS OCR 인증 포함 미션 기반 게이미피케이션·경쟁 요소 구현 및 서비스 런칭.',
+        screenshots: ['images/screenshots/badge/01.png', 'images/screenshots/badge/02.png']
+      },
+      quick: {
+        tag: '솔루션',
+        title: '범용 퀵 페이지',
+        desc: '회원사별 커스터마이징 지원하는 퀵 주문 접수·상태 추적 솔루션 신규 개발 및 런칭. 카카오 채널 연동.',
+        screenshots: ['images/screenshots/quick/01.png', 'images/screenshots/quick/02.png']
+      },
+      franchise: {
+        tag: '어드민',
+        title: '가맹점주용 웹 사이트',
+        desc: '50개 이상 가맹점 대상 매출·정산·발주 도메인 관리 페이지 신규 개발부터 유지보수·리뉴얼까지 전 주기 단독 담당. 차트·테이블 기반 데이터 시각화 및 엑셀 다운로드.',
+        screenshots: ['images/screenshots/franchise/01.png', 'images/screenshots/franchise/02.png', 'images/screenshots/franchise/03.png', 'images/screenshots/franchise/04.png', 'images/screenshots/franchise/05.png', 'images/screenshots/franchise/06.png']
+      }
+    };
+
+    const projectModal = document.getElementById('projectModal');
+    const modalTag = document.getElementById('modalTag');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalScreenshots = document.getElementById('modalScreenshots');
+    let lastFocusedEl = null;
+
+    function openProjectModal(id) {
+      const data = projectData[id];
+      if (!data) return;
+
+      lastFocusedEl = document.activeElement;
+      modalTag.textContent = data.tag;
+      modalTitle.textContent = data.title;
+      modalDesc.textContent = data.desc;
+      modalScreenshots.innerHTML = '';
+
+      data.screenshots.forEach((src, i) => {
+        const img = new Image();
+        img.alt = `${data.title} 스크린샷 ${i + 1}`;
+        img.className = 'modal-screenshot';
+        img.onload = () => {
+          if (placeholder.parentNode === modalScreenshots) placeholder.replaceWith(img);
+        };
+        img.onerror = () => {};
+
+        const placeholder = document.createElement('div');
+        placeholder.className = 'modal-screenshot-placeholder';
+        placeholder.textContent = `스크린샷 준비 중 (${i + 1}/${data.screenshots.length})`;
+
+        modalScreenshots.appendChild(placeholder);
+        img.src = src;
+      });
+
+      projectModal.classList.add('open');
+      projectModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      projectModal.querySelector('.modal-close').focus();
+    }
+
+    function closeProjectModal() {
+      if (!projectModal.classList.contains('open')) return;
+
+      projectModal.classList.remove('open');
+      projectModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastFocusedEl) lastFocusedEl.focus();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!projectModal.classList.contains('open')) return;
+
+      if (e.key === 'Escape') closeProjectModal();
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        projectModal.querySelector('.modal-close').focus();
+      }
+    });
 
     function toggleSection(label) {
       const body = label.nextElementSibling;

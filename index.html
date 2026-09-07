@@ -1157,7 +1157,7 @@
 
     const start = new Date(2022, 1); // 2022.02
     const now = new Date();
-    const expYears = now.getFullYear() - start.getFullYear() - (now.getMonth() < start.getMonth() ? 1 : 0);
+    const expYears = now.getFullYear() - start.getFullYear() - (now.getMonth() < start.getMonth() ? 1 : 0) + 1;
     document.getElementById('expYear').textContent = expYears;
 
     document.getElementById('copyYear').textContent = new Date().getFullYear();
